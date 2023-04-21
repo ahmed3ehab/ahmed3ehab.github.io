@@ -9,8 +9,6 @@ og_image: /media/Broken-Access-Control.png
 
 - Broken access control refers to a type of security vulnerability where a user is able to access resources or perform actions that they should not be able to due to improperly implemented access controls. This type of vulnerability can occur in various types of software and systems, such as web applications, operating systems, and databases.
 
-- Broken access control vulnerabilities can be mitigated through proper access control design and implementation, including the use of strong authentication mechanisms, role-based access control, and regular security testing and auditing. It is important for software developers and system administrators to stay up-to-date with the latest security best practices and patches to prevent these types of vulnerabilities from occurring.
-
 ## Access control vulnerabilities and privilege escalation
 
 - `Access control vulnerabilities` refer to weaknesses in a system's security mechanisms that allow unauthorized access to resources, data, or functionality. `Privilege escalation`, on the other hand, is a type of attack that occurs when an attacker gains higher privileges than they are authorized to have, typically by exploiting a vulnerability in the system.
@@ -94,14 +92,10 @@ https://insecure-website.com/robots.txt
 ```
 Even if the URL isn't disclosed anywhere, an attacker may be able to use a wordlist to brute-force the location of the sensitive functionality.
 
-For a practical lab visit :
-```
-https://portswigger.net/web-security/access-control/lab-unprotected-admin-functionality  
-```
-
 In some cases, sensitive functionality is not robustly protected but is concealed by giving it a less predictable URL: so called security by obscurity. Merely hiding sensitive functionality does not provide effective access control since users might still discover the obfuscated URL in various ways.
 
 For example, consider an application that hosts administrative functions at the following URL:
+
 ```
 https://insecure-website.com/administrator-panel-yb556
 ``` 
@@ -125,6 +119,8 @@ This script adds a link to the user's UI if they are an admin user. However, the
 
 For a practical lab:
 ```
+https://portswigger.net/web-security/access-control/lab-unprotected-admin-functionality  
+
 https://portswigger.net/web-security/access-control/lab-unprotected-admin-functionality-with-unpredictable-url
 ```
 
@@ -153,9 +149,10 @@ Some common parameter-based access control methods include:
 
 Parameter-based access control can be an effective method for controlling access to resources in web applications. However, it is important to ensure that access control rules are properly defined and enforced to prevent unauthorized access. Regular testing and auditing can help identify and remediate any vulnerabilities in the access control system.
 
-For a practical lab : 
+For a practical lab: 
 ```
 https://portswigger.net/web-security/access-control/lab-user-role-controlled-by-request-parameter
+
 https://portswigger.net/web-security/access-control/lab-user-role-can-be-modified-in-user-profile
 ```
 
@@ -190,12 +187,209 @@ An alternative attack can arise in relation to the HTTP method used in the reque
 For a practical lab : 
 ```
 https://portswigger.net/web-security/access-control/lab-url-based-access-control-can-be-circumvented
+
 https://portswigger.net/web-security/access-control/lab-method-based-access-control-can-be-circumvented
 ```
 
+---
+
+### Broken access control resulting from URL-matching discrepancies
+
+URL-matching discrepancies occur when the access control mechanism in a web application uses URL patterns to determine which users are allowed to access which resources. If the URL patterns are not properly defined or implemented, it can result in a mismatch between what the user is allowed to access and what they actually can access.
+
+- Let's say we have a web application that allows users to view and edit their own profile information. The application uses a URL pattern of `"/users/{userId}"` to allow users to access their profile page. The application also has an access control mechanism that verifies whether the user is logged in and whether the requested profile belongs to the logged-in user.
+
+    However, due to a programming error, the application is not properly validating the "userId" parameter in the URL. As a result, an attacker can manipulate the URL and access other users' profiles by changing the "userId" parameter.
+
+    For example, if the attacker changes the URL from `"/users/123"` (where "123" is the attacker's own user ID) to `"/users/456"` (where "456" is the ID of another user), the application will allow the attacker to access the profile information of the other user, even though they are not authorized to do so.
+
+- Another example, consider a web application that has a URL pattern of `"/admin/*"` to indicate that any URL starting with `"/admin/"` requires administrator-level access. However, if the application does not properly validate this pattern, a user may be able to access an administrative function by simply changing the URL from `"/user/profile"` to `"/admin/profile"`.
+
+- Another example, they may be tolerant of inconsistent capitalization, so a request to `/ADMIN/DELETEUSER` may still be mapped to the same `/admin/deleteUser` endpoint. This isn't an issue in itself, but if the access control mechanism is less tolerant, it may treat these as two distinct endpoints and fail to enforce the appropriate restrictions as a result.
+
+- Similar discrepancies can arise if developers using the Spring framework have enabled the `useSuffixPatternMatch` option. This allows paths with an arbitrary file extension to be mapped to an equivalent endpoint with no file extension. In other words, a request to `/admin/deleteUser.anything` would still match the `/admin/deleteUser` pattern. Prior to Spring 5.3, this option is enabled by default.
+
+- On other systems, you may encounter discrepancies in whether `/admin/deleteUser` and `/admin/deleteUser/` are treated as a distinct endpoints. In this case, you may be able to bypass access controls simply by appending a trailing slash to the path. 
+
+--- 
+
+## Horizontal privilege escalation
+
+Horizontal privilege escalation is a type of security vulnerability that occurs when a user gains access to resources or performs actions that they are not authorized to perform, but within the same level of privilege. In other words, the user is able to access resources or perform actions that are intended for another user with the same level of access.
+
+For example, let's say there are two users, User A and User B, who both have the same level of access in a web application. User A is able to view and modify their own profile, but should not be able to view or modify User B's profile. However, due to a flaw in the application's access control mechanism, User A is able to access and modify User B's profile as well.
+
+This type of vulnerability can be exploited by attackers to gain access to sensitive data or perform unauthorized actions. For example, an attacker who gains access to another user's profile may be able to view their personal information or modify their account settings.
+
+Horizontal privilege escalation attacks may use similar types of exploit methods to vertical privilege escalation. For example, a user might ordinarily access their own account page using a URL like the following: 
+```
+https://insecure-website.com/myaccount?id=123
+```
+Now, if an attacker modifies the `id` parameter value to that of another user, then the attacker might gain access to another user's account page, with associated data and functions. 
+
+In some applications, the exploitable parameter does not have a predictable value. For example, instead of an incrementing number, an application might use globally unique identifiers (GUIDs) to identify users. Here, an attacker might be unable to guess or predict the identifier for another user. However, the GUIDs belonging to other users might be disclosed elsewhere in the application where users are referenced, such as user messages or reviews. 
+
+In some cases, an application does detect when the user is not permitted to access the resource, and returns a redirect to the login page. However, the response containing the redirect might still include some sensitive data belonging to the targeted user, so the attack is still successful. 
+
+For Practical Labs:
+```
+https://portswigger.net/web-security/access-control/lab-user-id-controlled-by-request-parameter
+
+https://portswigger.net/web-security/access-control/lab-user-id-controlled-by-request-parameter-with-unpredictable-user-ids
+
+https://portswigger.net/web-security/access-control/lab-user-id-controlled-by-request-parameter-with-data-leakage-in-redirect
+```
+
+---
+
+## Horizontal to vertical privilege escalation
+
+A horizontal privilege escalation attack can be turned into a vertical privilege escalation, by compromising a more privileged user. For example, a horizontal escalation might allow an attacker to reset or capture the password belonging to another user. If the attacker targets an administrative user and compromises their account, then they can gain administrative access and so perform vertical privilege escalation
+
+For example, an attacker might be able to gain access to another user's account page using the parameter tampering technique already described for horizontal privilege escalation: 
+
+```
+https://insecure-website.com/myaccount?id=456
+```
+
+If the target user is an application administrator, then the attacker will gain access to an administrative account page. This page might disclose the administrator's password or provide a means of changing it, or might provide direct access to privileged functionality. 
+
+For Practical Lab:
+```
+https://portswigger.net/web-security/access-control/lab-user-id-controlled-by-request-parameter-with-password-disclosure
+```
+
+---
+
+## Insecure direct object references (IDOR)
+
+Insecure direct object references (IDOR) are a type of access control vulnerability that arises when an application uses user-supplied input to access objects directly. The term IDOR was popularized by its appearance in the OWASP 2007 Top Ten. However, it is just one example of many access control implementation mistakes that can lead to access controls being circumvented. IDOR vulnerabilities are most commonly associated with horizontal privilege escalation, but they can also arise in relation to vertical privilege escalation. 
+
+For example, let's say a website has a page that displays a user's account information. The website may use the user's ID as a parameter in the URL to retrieve and display the user's account details. If the website does not properly validate the user's ID before retrieving and displaying the account details, an attacker could manipulate the ID parameter to view another user's account information.
+
+This type of vulnerability can lead to sensitive data exposure and unauthorized access to resources. To prevent IDOR vulnerabilities, it is important to implement proper access controls and validate user input properly. One way to prevent IDOR is to use indirect object references, where a unique identifier is used instead of a direct reference to an object. Additionally, applications should use proper authorization checks to ensure that users only have access to resources that they are authorized to access.
+
+### IDOR vulnerability with direct reference to database objects
+
+An IDOR vulnerability with direct reference to database objects can occur when an application uses user input to directly access and manipulate database objects without proper validation and authorization checks. For example, if an application uses a user's ID to retrieve and display data from a database, an attacker could modify the ID parameter to access and view data that they are not authorized to view.
+
+Consider a website that uses the following URL to access the customer account page, by retrieving information from the back-end database: 
+
+```
+https://insecure-website.com/customer_account?customer_number=132355
+```
+
+Here, the customer number is used directly as a record index in queries that are performed on the back-end database. If no other controls are in place, an attacker can simply modify the customer_number value, bypassing access controls to view the records of other customers. This is an example of an IDOR vulnerability leading to horizontal privilege escalation. 
+
+An attacker might be able to perform horizontal and vertical privilege escalation by altering the user to one with additional privileges while bypassing access controls. Other possibilities include exploiting password leakage or modifying parameters once the attacker has landed in the user's accounts page, for example. 
 
 
+### IDOR vulnerability with direct reference to static files
 
+IDOR vulnerabilities often arise when sensitive resources are located in static files on the server-side filesystem. For example, a website might save chat message transcripts to disk using an incrementing filename, and allow users to retrieve these by visiting a URL like the following: 
 
+```
+https://insecure-website.com/static/12144.txt
+```
 
+In this situation, an attacker can simply modify the filename to retrieve a transcript created by another user and potentially obtain user credentials and other sensitive data. 
 
+For Practical Lab:
+```
+https://portswigger.net/web-security/access-control/lab-insecure-direct-object-references
+
+https://cybertalents.com/challenges/web/silly-doors
+```
+
+--- 
+
+## Access control vulnerabilities in multi-step processes
+
+Many web sites implement important functions over a series of steps. This is often done when a variety of inputs or options need to be captured, or when the user needs to review and confirm details before the action is performed. For example, administrative function to update user details might involve the following steps: 
+
+1. `Load form containing details for a specific user.`
+2. `Submit changes. `
+3. `Review the changes and confirm. `
+
+Sometimes, a web site will implement rigorous access controls over some of these steps, but ignore others. For example, suppose access controls are correctly applied to the first and second steps, but not to the third step. Effectively, the web site assumes that a user will only reach step 3 if they have already completed the first steps, which are properly controlled. Here, an attacker can gain unauthorized access to the function by skipping the first two steps and directly submitting the request for the third step with the required parameters. 
+
+Multi-step processes can be vulnerable to access control vulnerabilities if the access controls are not properly designed and implemented. Here are some examples of access control vulnerabilities that can occur in multi-step processes:
+
+- `Insufficient authentication`: If the authentication mechanism used in the multi-step process is not strong enough, it can be compromised by attackers. For example, if the authentication only requires a username and password, an attacker could easily guess or brute-force the password and gain access to the next step of the process.
+- `Lack of authorization`: Even if the authentication mechanism is strong, if the authorization checks are not in place, attackers may be able to access steps they are not authorized to access. This can occur if the authorization checks are not properly implemented, or if they are bypassed by attackers who exploit vulnerabilities in the system.
+- `Poorly designed workflow`: A poorly designed workflow can also lead to access control vulnerabilities in multi-step processes. For example, if the workflow does not require proper segregation of duties, a single user may be able to carry out all the steps in the process, which could lead to fraud or misuse of resources.
+- `Inadequate logging and monitoring`: Without proper logging and monitoring, it can be difficult to detect access control violations in multi-step processes. This can occur if the system does not log all user activities or if the logs are not properly monitored.
+
+For Practical Lab:
+```
+https://portswigger.net/web-security/access-control/lab-multi-step-process-with-no-access-control-on-one-step
+```
+
+---
+
+## Referer-based access control
+
+Referer-based access control is a technique used to control access to a web resource based on the HTTP Referer header sent by the client browser. The Referer header contains the URL of the page that the user was on before accessing the current page. Referer-based access control can be used to restrict access to resources based on the referring page or domain.
+
+For example, a website owner may want to restrict access to a particular resource (such as a file or page) only to users who have come from a specific page or domain. To do this, the website can check the Referer header sent by the client browser when a user tries to access the resource. If the Referer header matches the expected value, the user is granted access; otherwise, access is denied.
+
+While Referer-based access control can be useful in certain situations, it has some limitations and vulnerabilities that should be considered:
+
+- `The Referer header can be easily spoofed`: Attackers can manipulate the Referer header to make it appear as though the request is coming from an authorized page or domain, allowing them to bypass the access control mechanism.
+- `Referer headers are not always sent`: Some browsers do not send Referer headers, or users can disable them in their browser settings. In these cases, the access control mechanism may not function as expected.
+- `The Referer header can reveal sensitive information:` The Referer header can reveal the URL of the referring page, which may contain sensitive information. This information could be intercepted by attackers or stored in logs, potentially exposing it to unauthorized parties.
+- `Referer headers can be manipulated by intermediaries`: Intermediaries such as proxies and firewalls may modify or strip the Referer header, which could cause the access control mechanism to fail or behave unexpectedly.
+
+Overall, while Referer-based access control can be a useful technique in some cases, it should not be relied upon as the sole mechanism for access control. Other techniques, such as user authentication and authorization, should be used in conjunction with Referer-based access control to provide a more robust and secure access control mechanism.
+
+```
+https://portswigger.net/web-security/access-control/lab-referer-based-access-control
+```
+
+---
+
+## Location-based access control
+
+Location-based access control is a technique used to control access to resources based on the physical location of the user. This technique is commonly used in situations where it is necessary to restrict access to resources based on geographic or environmental factors, such as when access is restricted to a particular building or area.
+
+Location-based access control can be implemented in several ways, including:
+- `IP-based geolocation`: This technique involves mapping the user's IP address to a physical location using a geolocation database. Access to resources can then be restricted based on the user's location.
+- `GPS-based location`: This technique involves using the GPS capabilities of the user's device to determine their physical location. Access to resources can then be restricted based on their proximity to a particular location.
+- `Bluetooth-based proximity`: This technique involves using Bluetooth signals to determine the user's proximity to a particular location. Access to resources can then be restricted based on their distance from the location.
+- `Wi-Fi-based locatio`n: This technique involves using the Wi-Fi network to determine the user's physical location. Access to resources can then be restricted based on their location within the network.
+
+While location-based access control can be an effective technique for controlling access to resources, it also has some limitations and vulnerabilities that should be considered:
+- `Location spoofing`: Attackers can spoof their location using various techniques, such as VPNs or proxies, to bypass the access control mechanism.
+- `Signal interference`: GPS and Bluetooth signals can be disrupted by environmental factors, such as buildings or other electronic devices, which can affect the accuracy of location-based access control.
+- `Privacy concerns`: Collecting and using location data can raise privacy concerns, particularly if the data is not properly secured or handled.
+- `Inconvenience`: Location-based access control can be inconvenient for users who need to access resources from different locations or who have devices that are not equipped with the necessary technology.
+
+Overall, location-based access control can be a useful technique in certain situations, but it should be used in conjunction with other access control techniques, such as user authentication and authorization, to provide a more robust and secure access control mechanism.
+
+---
+
+## How to prevent access control vulnerabilities
+
+Preventing access control vulnerabilities involves implementing a range of security measures to protect against unauthorized access to resources. Here are some best practices for preventing access control vulnerabilities:
+
+- `Implement access control policies`: Develop and implement a clear and consistent access control policy that specifies who is authorized to access which resources and under what conditions.
+- `Use strong authentication and authorization mechanisms`: Require strong passwords, implement two-factor authentication, and use role-based access control to ensure that only authorized users have access to sensitive resources.
+- `Regularly review and update access controls`: Regularly review access control policies and permissions to ensure that they remain relevant and effective, and revoke access for users who no longer require it.
+- `Use encryption`: Encrypt sensitive data at rest and in transit to prevent unauthorized access to data, even if access controls are breached.
+- `Use audit logs`: Monitor access to resources using audit logs to detect and respond to unauthorized access attempts.
+- `Test for vulnerabilities`: Regularly test for vulnerabilities in access controls, using techniques such as penetration testing, to identify and remediate any weaknesses in the system.
+- `Educate users`: Provide regular training to users on the importance of access control and how to identify and report suspicious activity.
+- `Never rely on obfuscation alone for access control. `
+- ` Unless a resource is intended to be publicly accessible, deny access by default. `
+- `Wherever possible, use a single application-wide mechanism for enforcing access controls. `
+-  `At the code level, make it mandatory for developers to declare the access that is allowed for each resource, and deny access by default. `
+
+By implementing these best practices, organizations can significantly reduce the risk of access control vulnerabilities and ensure that sensitive resources are protected from unauthorized access. It's also important to stay up to date with the latest security trends and technologies to stay ahead of evolving threats.
+
+---
+
+## References 
+
+PortSwigger : [Access control vulnerabilities and privilege escalation](https://portswigger.net/web-security/access-control)
+
+HarabHackSploit (youtube channal) : [Broken Access Control](https://www.youtube.com/watch?v=8gLOhMrIpVo&list=PLTSGZiCtCBfMMLkmaN7tGEhbc0QbOEtEA&index=9)
