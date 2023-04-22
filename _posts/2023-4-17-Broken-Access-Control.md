@@ -392,4 +392,8 @@ By implementing these best practices, organizations can significantly reduce the
 
 PortSwigger : [Access control vulnerabilities and privilege escalation](https://portswigger.net/web-security/access-control)
 
-HarabHackSploit (youtube channal) : [Broken Access Control](https://www.youtube.com/watch?v=8gLOhMrIpVo&list=PLTSGZiCtCBfMMLkmaN7tGEhbc0QbOEtEA&index=9)
+HarabHackSploit (youtube channel) : [Broken Access Control](https://www.youtube.com/watch?v=8gLOhMrIpVo&list=PLTSGZiCtCBfMMLkmaN7tGEhbc0QbOEtEA&index=9)
+
+Rana Khalil (youtube channel) : [Broken Access Control (Short Version)](https://www.youtube.com/playlist?list=PLuyTk2_mYISJxFXJDdkDZjXD4K1yl3NFU)
+
+Rana Khalil (youtube channel) : [Broken Access Control (Long Version)](https://www.youtube.com/playlist?list=PLuyTk2_mYISId4_l9YET7Gv29cHcNguq-)
