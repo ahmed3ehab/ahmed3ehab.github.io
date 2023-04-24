@@ -3,17 +3,19 @@ layout: post
 title: Broken Access Control
 date: 2023-04-17
 categories: [Cybersecurity, Web application penetration testing]
-cover_image: /media/Broken-Access-Control.png
-og_image: /media/Broken-Access-Control.png
+cover_image: /images/access-control.svg
+og_image: /images/access-control.svg
 ---
 
-- Broken access control refers to a type of security vulnerability where a user is able to access resources or perform actions that they should not be able to due to improperly implemented access controls. This type of vulnerability can occur in various types of software and systems, such as web applications, operating systems, and databases.
+## Broken Access Control
+
+![](/images/access-control.svg)
+
+Broken access control refers to a type of security vulnerability where a user is able to access resources or perform actions that they should not be able to due to improperly implemented access controls. This type of vulnerability can occur in various types of software and systems, such as web applications, operating systems, and databases.
 
 ## Access control vulnerabilities and privilege escalation
 
-- `Access control vulnerabilities` refer to weaknesses in a system's security mechanisms that allow unauthorized access to resources, data, or functionality. `Privilege escalation`, on the other hand, is a type of attack that occurs when an attacker gains higher privileges than they are authorized to have, typically by exploiting a vulnerability in the system.
-
-![](/images/access-control.svg)
+`Access control vulnerabilities` refer to weaknesses in a system's security mechanisms that allow unauthorized access to resources, data, or functionality. `Privilege escalation`, on the other hand, is a type of attack that occurs when an attacker gains higher privileges than they are authorized to have, typically by exploiting a vulnerability in the system.
 
 ---
 
@@ -342,6 +344,7 @@ While Referer-based access control can be useful in certain situations, it has s
 
 Overall, while Referer-based access control can be a useful technique in some cases, it should not be relied upon as the sole mechanism for access control. Other techniques, such as user authentication and authorization, should be used in conjunction with Referer-based access control to provide a more robust and secure access control mechanism.
 
+For Practical Lab:
 ```
 https://portswigger.net/web-security/access-control/lab-referer-based-access-control
 ```
@@ -390,9 +393,11 @@ By implementing these best practices, organizations can significantly reduce the
 
 ## References 
 
-PortSwigger : [Access control vulnerabilities and privilege escalation](https://portswigger.net/web-security/access-control)
+PortSwigger Content : [Access control vulnerabilities and privilege escalation](https://portswigger.net/web-security/access-control) 
 
-HarabHackSploit (youtube channel) : [Broken Access Control](https://www.youtube.com/watch?v=8gLOhMrIpVo&list=PLTSGZiCtCBfMMLkmaN7tGEhbc0QbOEtEA&index=9)
+PortSwigger Labs : [Access control vulnerabilities and privilege escalation Labs](https://portswigger.net/web-security/access-control)
+
+HarabHackSploit (youtube channel) : [Broken Access Control](https://www.youtube.com/watch?v=8gLOhMrIpVo)
 
 Rana Khalil (youtube channel) : [Broken Access Control (Short Version)](https://www.youtube.com/playlist?list=PLuyTk2_mYISJxFXJDdkDZjXD4K1yl3NFU)
 
