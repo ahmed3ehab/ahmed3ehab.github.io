@@ -438,3 +438,4 @@ HarabHackSploit (youtube channel) : [Broken Access Control](https://www.youtube.
 Rana Khalil (youtube channel) : [Broken Access Control (Short Version)](https://www.youtube.com/playlist?list=PLuyTk2_mYISJxFXJDdkDZjXD4K1yl3NFU)
 
 Rana Khalil (youtube channel) : [Broken Access Control (Long Version)](https://www.youtube.com/playlist?list=PLuyTk2_mYISId4_l9YET7Gv29cHcNguq-)
+
