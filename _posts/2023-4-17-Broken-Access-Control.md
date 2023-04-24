@@ -22,15 +22,51 @@ Broken access control refers to a type of security vulnerability where a user is
 ## Access control 
 
 - Access control (or authorization) is the application  of constraints on who (or what) can perform attempted actions or access resources that they have requested. In the context of web applications, access control is dependent on authentication and session management: 
+
      1.  `Authentication` identifies the user and confirms that they are who they say they are. 
      2.  `Session management` identifies which subsequent HTTP requests are being made by that same user. 
      3.  `Access control` determines whether the user is allowed to carry out the action that they are attempting to perform. 
 
 - From a user perspective, access controls can be divided into the following categories: 
+
     1. `Vertical access controls`
     2. `Horizontal access controls`
     3. `Context-dependent access controls`
 
+- `Access control security models`
+
+---
+### Access Control Security Model
+
+is a formally defined definition of a set of access control rules that is independent of technology or implementation platform. Access control security models are implemented within operating systems, networks, database management systems and back office, application and web server software. Various access control security models have been devised over the years to match access control policies to business or organizational rules and changes in technology. 
+
+- `Programmatic access control`
+refers to the use of automated mechanisms and software to enforce access control policies. It involves defining access control rules and policies in code, which can be executed automatically by software systems to ensure that access to resources is granted or denied based on the defined rules.
+
+- `Discretionary access control (DAC)`
+Discretionary access control (DAC) is a type of access control system in which the owner or creator of a resource has complete control over who can access it and what level of access they have. In a DAC system, the owner can grant or deny access to any other user or group of users.
+
+    DAC systems are commonly used in smaller organizations where resources are controlled by a single individual or a small group of individuals. For example, a small business owner may use DAC to control access to important files on their personal computer.
+
+    One of the main advantages of DAC systems is their flexibility. The owner of a resource has complete control over who can access it, which means they can grant access to specific individuals or groups of individuals based on their needs. This makes it easy to manage access control on a small scale.
+
+- `Mandatory access control (MAC)`
+Mandatory access control (MAC) is a type of access control system in which access to resources is determined by a central authority based on a set of predefined rules. Unlike discretionary access control (DAC), which allows owners to control access to resources, in MAC, the access control policies are defined and enforced by the system itself.
+
+    In a MAC system, resources are assigned a security label that contains information about the sensitivity of the resource and the clearance level required to access it. Users are also assigned a security clearance level that reflects their level of authorization to access resources. When a user requests access to a resource, the system checks their clearance level against the security label of the resource to determine whether or not they are authorized to access it.
+
+    MAC systems are commonly used in environments where security is of utmost importance, such as government or military organizations. One of the main advantages of MAC is that it provides a high level of security by enforcing strict access control policies that cannot be overridden by individual users. This makes it difficult for unauthorized users to gain access to sensitive resources.
+
+- `Role-based access control (RBAC)`
+Role-based access control (RBAC) is a type of access control system that assigns permissions to users based on their roles within an organization. In RBAC, roles are defined based on the job functions or responsibilities of users within an organization, and permissions are assigned to these roles rather than individual users.
+
+    RBAC simplifies the process of managing permissions and access control by reducing the number of decisions that need to be made when assigning permissions. Instead of assigning permissions to each individual user, permissions are assigned to roles, and users are assigned to these roles based on their job functions. This makes it easier to manage permissions as users join or leave an organization, or as their job functions change.
+
+    RBAC also provides a higher level of security by limiting access to sensitive resources based on job functions. This makes it more difficult for users to access resources that they are not authorized to access, even if they have gained unauthorized access to the system.
+
+    RBAC has become a widely used access control model due to its simplicity and scalability. It can be easily implemented in a wide variety of environments and can be scaled to support large organizations with complex access control requirements.
+
+    
 --- 
 
 ### Vertical access controls
